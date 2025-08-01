@@ -177,6 +177,10 @@ module ColumnDataType
     real(r8), pointer :: excess_ice     (:,:) => null() ! excess ground ice in column (1:nlevgrnd) (0 to 1)
     real(r8), pointer :: frac_melted    (:,:) => null() ! fraction of layer that has ever thawed (for tracking excess ice removal) (0 to 1)
 
+    real(r8), pointer :: dendricity (:) => null()      ! dendricity
+    real(r8), pointer :: sphericity (:) => null()      ! sphericity
+    real(r8), pointer :: dyn_snw_shape (:,:) => null() ! dynamic snow shape
+
   contains
     procedure, public :: Init    => col_ws_init
     procedure, public :: Restart => col_ws_restart
@@ -1461,6 +1465,11 @@ contains
     allocate(this%vsfm_soilp_col_1d  (ncells))                        ; this%vsfm_soilp_col_1d  (:)   = spval
     allocate(this%h2orof             (begc:endc))                     ; this%h2orof             (:)   = spval
     allocate(this%frac_h2orof        (begc:endc))                     ; this%frac_h2orof        (:)   = spval
+
+    allocate(this%dendricity         (begc:endc))                     ; this%dendricity         (:)   = nan
+    allocate(this%sphericity         (begc:endc))                     ; this%dendricity         (:)   = nan
+    allocate(this%dyn_snw_shape      (begc:endc, -nlevsno+1:0))       ; this%dendricity         (:,:) = nan
+    
     if (use_polygonal_tundra) then
       ! polygonal tundra/ice wedge polygons:
       allocate(this%iwp_microrel       (begc:endc))                   ; this%iwp_microrel     (:) = spval
