@@ -54,7 +54,7 @@ module controlMod
   use elm_varctl              , only: add_temperature, add_co2
   use elm_varctl              , only: const_climate_hist
   use elm_varctl              , only: use_top_solar_rad
-  use elm_varctl              , only: snow_shape, snicar_atm_type, use_dust_snow_internal_mixing
+  use elm_varctl              , only: use_dynamic_snow_shape, snow_shape, snicar_atm_type, use_dust_snow_internal_mixing
   use EcosystemBalanceCheckMod, only: bgc_balance_check_tolerance => balance_check_tolerance
 
   !
@@ -345,7 +345,7 @@ contains
          lnd_rof_coupling_nstep
 
     namelist /elm_inparm/ &
-         snow_shape, snicar_atm_type, use_dust_snow_internal_mixing
+         use_dynamic_snow_shape, snow_shape, snicar_atm_type, use_dust_snow_internal_mixing
 
     namelist /elm_inparm/ &
          use_modified_infil
@@ -1022,6 +1022,7 @@ contains
 
     !SNICAR-AD
     call mpi_bcast (snow_shape, len(snow_shape), MPI_CHARACTER, 0, mpicom, ier)
+    call mpi_bcast (use_dynamic_snow_shape, len(use_dynamic_snow_shape), MPI_LOGICAL, 0, mpicom, ier)
     call mpi_bcast (snicar_atm_type, len(snicar_atm_type), MPI_CHARACTER, 0, mpicom, ier)
     call mpi_bcast (use_dust_snow_internal_mixing, 1, MPI_LOGICAL, 0, mpicom, ier)
 	
@@ -1081,6 +1082,7 @@ contains
     write(iulog,*) '    use_snicar_frc = ', use_snicar_frc
     write(iulog,*) '    use_snicar_ad = ', use_snicar_ad
     write(iulog,*) '    snow_shape = ', snow_shape
+    write(iulog,*) '    use_dynamic_snow_shape = ', use_dynamic_snow_shape
     write(iulog,*) '    snicar_atm_type = ', snicar_atm_type
     write(iulog,*) '    use_dust_snow_internal_mixing = ', use_dust_snow_internal_mixing
     write(iulog,*) '    use_vancouver = ', use_vancouver
