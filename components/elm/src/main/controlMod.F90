@@ -56,6 +56,7 @@ module controlMod
   use elm_varctl              , only: use_top_solar_rad
   use elm_varctl              , only: snow_shape, snicar_atm_type, use_dust_snow_internal_mixing
   use elm_varctl              , only: use_dynamic_snow_shape, use_wind_drift, use_fractional_snow_shape
+  use elm_varctl              , only: dendricity_threshold, sphericity_high_threshold, sphericity_low_threshold
   use EcosystemBalanceCheckMod, only: bgc_balance_check_tolerance => balance_check_tolerance
 
   !
@@ -350,6 +351,9 @@ contains
    
     namelist /elm_inparm/ &
          use_dynamic_snow_shape, use_wind_drift, use_fractional_snow_shape
+   
+    namelist /elm_inparm/ &
+         dendricity_threshold, sphericity_high_threshold, sphericity_low_threshold
 
     namelist /elm_inparm/ &
          use_modified_infil
@@ -1029,6 +1033,9 @@ contains
     call mpi_bcast (use_dynamic_snow_shape, 1, MPI_LOGICAL, 0, mpicom, ier)
     call mpi_bcast (use_wind_drift, 1, MPI_LOGICAL, 0, mpicom, ier)
     call mpi_bcast (use_fractional_snow_shape, 1, MPI_LOGICAL, 0, mpicom, ier)
+    call mpi_bcast (dendricity_threshold, 1, MPI_REAL8, 0, mpicom, ier)
+    call mpi_bcast (sphericity_high_threshold, 1, MPI_REAL8, 0, mpicom, ier)
+    call mpi_bcast (sphericity_low_threshold, 1, MPI_REAL8, 0, mpicom, ier)
     call mpi_bcast (snicar_atm_type, len(snicar_atm_type), MPI_CHARACTER, 0, mpicom, ier)
     call mpi_bcast (use_dust_snow_internal_mixing, 1, MPI_LOGICAL, 0, mpicom, ier)
 	
@@ -1091,6 +1098,9 @@ contains
     write(iulog,*) '    use_dynamic_snow_shape = ', use_dynamic_snow_shape
     write(iulog,*) '    use_wind_drift = ', use_wind_drift
     write(iulog,*) '    use_fractional_snow_shape = ', use_fractional_snow_shape
+    write(iulog,*) '    dendricity_threshold = ', dendricity_threshold
+    write(iulog,*) '    sphericity_high_threshold = ', sphericity_high_threshold
+    write(iulog,*) '    sphericity_low_threshold = ', sphericity_low_threshold
     write(iulog,*) '    snicar_atm_type = ', snicar_atm_type
     write(iulog,*) '    use_dust_snow_internal_mixing = ', use_dust_snow_internal_mixing
     write(iulog,*) '    use_vancouver = ', use_vancouver
